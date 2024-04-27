@@ -21,13 +21,24 @@ export const getOneContact = async (req, res, next) => {
       throw HttpError(404);
     }
   } catch (error) {
-    next(error)
+    next(error);
   }
-  
 };
 
-export const deleteContact = async (req, res) => {};
+export const deleteContact = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const removedContact = await removeContact(id);
+    if (removedContact) {
+      res.status(200).json(removedContact)
+    } else {
+      throw HttpError(404)
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
-export const createContact = async (req, res) => {};
+export const createContact = async (req, res, next) => {};
 
-export const updateContact = async (req, res) => {};
+export const updateContact = async (req, res, next) => {};
