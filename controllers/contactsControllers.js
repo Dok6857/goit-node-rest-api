@@ -3,6 +3,7 @@ import {
   getContactById,
   removeContact,
   addContact,
+  updateContactById
 } from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
 import {
@@ -45,22 +46,39 @@ export const deleteContact = async (req, res, next) => {
 
 export const createContact = async (req, res, next) => {
   try {
-    const schema = createContactSchema.validate(req.body)
-    const { name, email, phone } = req.body;
+    const schema = createContactSchema.validate(req.body);
     if (schema.error) {
-      throw HttpError(400, schema.error.message)
+      throw HttpError(400, schema.error.message);
     }
-    const newContact = await addContact(name, email, phone)
-    res.status(201).json(newContact)
+    const { name, email, phone } = req.body;
+    const newContact = await addContact(name, email, phone);
+    res.status(201).json(newContact);
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
 export const updateContact = async (req, res, next) => {
   try {
-    
+    const contactId = req.params.id;
+    const { name, email, phone } = req.body;
+    const { error } = updateContactSchema.validate({ name, email, phone });
+
+    if (!name && !email && !phone)
+      throw HttpError(400, "Body must have at least one field");
+
+    if (error) throw HttpError(400);
+
+    const updatedContact = await updateContactById(contactId, {
+      name,
+      email,
+      phone,
+    });
+
+    if (!updatedContact) throw HttpError(404);
+
+    res.status(200).json(updatedContact);
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
