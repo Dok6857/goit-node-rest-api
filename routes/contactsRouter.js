@@ -21,4 +21,6 @@ contactsRouter.post("/", jsonParser, createContact);
 
 contactsRouter.put("/:id", jsonParser, updateContact);
 
+contactsRouter.patch("/:id/favorite", updateContact);
+
 export default contactsRouter;
