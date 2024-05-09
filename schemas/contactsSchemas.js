@@ -6,11 +6,16 @@ export const createContactSchema = Joi.object({
   phone: Joi.string()
     .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
     .required(),
-})
+});
 
 export const updateContactSchema = Joi.object({
   name: Joi.string(),
   email: Joi.string(),
-  phone: Joi.string()
-  .pattern(/^\(\d{3}\) \d{3}-\d{4}$/),
-}).min(1).message("Body must have at least one field")
+  phone: Joi.string().pattern(/^\(\d{3}\) \d{3}-\d{4}$/),
+})
+  .min(1)
+  .message("Body must have at least one field");
+
+export const patchContactSchema = Joi.object({
+  favorite: Joi.boolean.required(),
+});

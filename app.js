@@ -1,6 +1,10 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import mongoose from "mongoose";
+import { PORT, DB_URI } from "./configs/serverConfig.js";
+
+mongoose.Promise = global.Promise;
 
 import contactsRouter from "./routes/contactsRouter.js";
 
@@ -21,6 +25,15 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-app.listen(3000, () => {
-  console.log("Server is running. Use our API on port: 3000");
-});
+const connection = mongoose.connect(DB_URI);
+connection
+  .then(() => {
+    console.log("Database connection was successful");
+    app.listen(PORT, () => {
+      console.log(`Server is running. Use Our API on port: ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(`Server is not running. ${err.message}`);
+    process.exit(1);
+  });
