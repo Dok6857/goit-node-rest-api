@@ -1,3 +1,5 @@
+// contactServices
+
 import Contact from "../models/contact.js";
 
 export const listContacts = async () => {
@@ -18,5 +20,5 @@ export const rewriteContact = (id, fields) => {
 };
 
 export const removeContact = (id) => {
-  return Contact.findByIdAndRemove({ _id: id });
+  return Contact.findByIdAndDelete({ _id: id });
 };

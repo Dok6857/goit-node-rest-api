@@ -1,3 +1,5 @@
+// modelSchema
+
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
@@ -15,7 +17,9 @@ const contact = new Schema({
   favorite: {
     type: Boolean,
     default: false,
-  },
+  }, 
+}, {
+  versionKey: false
 });
 
 const Contact = mongoose.model("contact", contact);
