@@ -2,9 +2,15 @@
 
 import bcrypt from "bcrypt";
 import User from "../models/user.js";
+import { userRegisterSchema } from "../schemas/userValidationSchema.js";
 
 async function register(req, res, next) {
   const { name, email, password } = req.body;
+  const { error } = userRegisterSchema.validate({ email, password });
+  if (error) {
+    return res.status(400).json({ message: error.message });
+  }
+
   const emailInLowerCase = email.toLowerCase();
 
   try {
@@ -23,7 +29,7 @@ async function register(req, res, next) {
       password: passwordHash,
     });
 
-    console.log('User created:', user);
+    console.log("User created:", user);
     res.status(201).send({ message: "User registered successfully", user });
   } catch (error) {
     next(error);
