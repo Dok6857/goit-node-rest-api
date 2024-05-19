@@ -13,25 +13,37 @@ import {
 import {
   createContactSchema,
   updateContactSchema,
-  patchContactSchema
+  patchContactSchema,
 } from "../schemas/contactsSchemas.js";
 
 import validateBody from "../helpers/validateBody.js";
+import { tokenCheck } from "../middleware/tokenCheck.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/", tokenCheck, getAllContacts);
 
-contactsRouter.get("/:id", getOneContact);
+contactsRouter.get("/:id", tokenCheck, getOneContact);
 
-contactsRouter.delete("/:id", deleteContact);
+contactsRouter.delete("/:id", tokenCheck, deleteContact);
 
-contactsRouter.post("/", validateBody(createContactSchema), createContact);
+contactsRouter.post(
+  "/",
+  tokenCheck,
+  validateBody(createContactSchema),
+  createContact
+);
 
-contactsRouter.put("/:id", validateBody(updateContactSchema), updateContact);
+contactsRouter.put(
+  "/:id",
+  tokenCheck,
+  validateBody(updateContactSchema),
+  updateContact
+);
 
 contactsRouter.patch(
   "/:contactId/favorite",
+  tokenCheck,
   validateBody(patchContactSchema),
   updateStatusContact
 );
