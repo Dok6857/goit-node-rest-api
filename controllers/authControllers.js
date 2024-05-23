@@ -3,6 +3,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import gravatar from "gravatar"
 
 export async function register(req, res, next) {
   const { name, email, password } = req.body;
@@ -18,10 +19,12 @@ export async function register(req, res, next) {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
+    const avatarURL = gravatar.url(emailInLowerCase, { s: '250', d: 'retro' }, true);
 
     const user = await User.create({
       email: emailInLowerCase,
       password: passwordHash,
+      avatarURL: avatarURL,
     });
 
     res.status(201).send({
@@ -96,7 +99,7 @@ export async function getCurrent(req, res, next) {
 
     res
       .status(200)
-      .send({ email: user.email, subscription: user.subscription });
+      .send({ email: user.email, subscription: user.subscription, token: user.token });
   } catch (error) {
     next(error);
   }
