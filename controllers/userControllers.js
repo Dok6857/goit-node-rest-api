@@ -9,19 +9,16 @@ import Jimp from "jimp";
 export async function uploadAvatar(req, res, next) {
   try {
     if (!req.file) {
-        throw HttpError(400, "No file uploaded")
+      throw HttpError(400, "No file uploaded");
     }
 
     const tmpPath = req.file.path;
-    const targetPath = path.resolve("public/avatars", req.file.filename)
+    const targetPath = path.resolve("public/avatars", req.file.filename);
 
-    const image = await Jimp.read(tmpPath)
-    await image.resize(250, 250).writeAsync(targetPath)
+    const image = await Jimp.read(tmpPath);
+    await image.resize(250, 250).writeAsync(targetPath);
 
-    // await fs.rename(
-    //   req.file.path,
-    //   path.resolve("public/avatars", req.file.filename)
-    // );
+    await fs.unlink(tmpPath);
 
     const userId = req.user._id;
     const user = await User.findOneAndUpdate(
@@ -31,12 +28,10 @@ export async function uploadAvatar(req, res, next) {
     );
 
     if (user === null) {
-        throw HttpError(404, "User not found")
+      throw HttpError(404, "User not found");
     }
 
-    console.log(user.avatarURL);
-
-    res.send(user);
+    res.send(user.avatarURL);
   } catch (error) {
     next(error);
   }
