@@ -31,7 +31,7 @@ export async function uploadAvatar(req, res, next) {
       throw HttpError(404, "User not found");
     }
 
-    res.send(user.avatarURL);
+    res.json({ avatarURL: user.avatarURL });
   } catch (error) {
     next(error);
   }
