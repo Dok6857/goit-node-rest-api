@@ -10,15 +10,19 @@ mongoose.Promise = global.Promise;
 
 import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/auth.js";
+import usersRouter from "./routes/users.js";
 
 const app = express();
 
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
+app.use(express.static('public'));
+
 
 app.use("/api/contacts", contactsRouter);
 app.use("/api/users", authRouter);
+app.use("/api/users", usersRouter);
 
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });
