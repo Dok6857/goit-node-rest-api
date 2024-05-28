@@ -36,3 +36,11 @@ export async function uploadAvatar(req, res, next) {
     next(error);
   }
 }
+
+export async function verificationByToken(req, res, next) {
+  try {
+    
+  } catch (error) {
+    next(error)
+  }
+}

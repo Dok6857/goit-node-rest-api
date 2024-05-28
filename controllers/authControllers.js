@@ -2,8 +2,10 @@
 
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
+import { sendMail } from "../mail/mailFunc.js";
 import jwt from "jsonwebtoken";
-import gravatar from "gravatar"
+import gravatar from "gravatar";
+import { nanoid } from "nanoid";
 
 export async function register(req, res, next) {
   const { name, email, password } = req.body;
@@ -19,12 +21,26 @@ export async function register(req, res, next) {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const avatarURL = gravatar.url(emailInLowerCase, { s: '250', d: 'retro' }, true);
+    const avatarURL = gravatar.url(
+      emailInLowerCase,
+      { s: "250", d: "retro" },
+      true
+    );
 
+    const verificationToken = nanoid();
     const user = await User.create({
       email: emailInLowerCase,
       password: passwordHash,
       avatarURL: avatarURL,
+      verificationToken,
+    });
+
+    sendMail({
+      to: emailInLowerCase,
+      from: "dok6857@gmail.com",
+      subject: "Thank you for registration",
+      html: `<h1 style="color: teal">Follow this <a href="http://localhost:3000/api/users/verify/${verificationToken}">link</a> to verify your email</h1>`,
+      text: `Follow this link to verify your email http://localhost:3000/api/users/verify/${verificationToken}`,
     });
 
     res.status(201).send({
@@ -97,9 +113,11 @@ export async function getCurrent(req, res, next) {
       return res.status(401).send({ message: "Not authorized" });
     }
 
-    res
-      .status(200)
-      .send({ email: user.email, subscription: user.subscription, token: user.token });
+    res.status(200).send({
+      email: user.email,
+      subscription: user.subscription,
+      token: user.token,
+    });
   } catch (error) {
     next(error);
   }

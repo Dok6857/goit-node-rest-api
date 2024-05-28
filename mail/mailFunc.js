@@ -20,4 +20,6 @@ const message = {
   text: "Hi, I'm a test mail!",
 };
 
-transport.sendMail(message).then(console.log).catch(console.error);
+export function sendMail(message) {
+  return transport.sendMail(message).then(console.log).catch(console.error);
+}
