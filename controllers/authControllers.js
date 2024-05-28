@@ -72,6 +72,10 @@ export async function login(req, res, next) {
       return res.status(401).send({ message: "Email or password is wrong" });
     }
 
+    if (user.verify === false) {
+      return res.status(401).send({ message: "Please verify your email" })
+    }
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
