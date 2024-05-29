@@ -10,5 +10,6 @@ const usersRouter = express.Router();
 
 usersRouter.patch("/avatars", uploadMIddleware.single("avatar"), tokenCheck, uploadAvatar);
 usersRouter.get("/verify/:verificationToken", verificationByToken)
+usersRouter.post("/verify")
 
 export default usersRouter;

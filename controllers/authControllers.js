@@ -47,6 +47,7 @@ export async function register(req, res, next) {
       user: {
         email: user.email,
         subscription: user.subscription,
+        verificationToken: user.verificationToken,
       },
     });
   } catch (error) {
@@ -65,6 +66,8 @@ export async function login(req, res, next) {
     if (!user) {
       return res.status(401).send({ message: "Email or password is wrong" });
     }
+
+    console.log(`User found with verificationToken: ${user.verificationToken}`);
 
     const isMatch = await bcrypt.compare(password, user.password);
 
