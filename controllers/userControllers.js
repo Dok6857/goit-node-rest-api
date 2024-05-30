@@ -5,6 +5,7 @@ import path from "node:path";
 import User from "../models/User.js";
 import HttpError from "../helpers/HttpError.js";
 import Jimp from "jimp";
+import { sendMail } from "../mail/mailFunc.js";
 
 export async function uploadAvatar(req, res, next) {
   try {
@@ -79,7 +80,7 @@ export async function repeatVerification(req, res, next) {
     }
     
     const verificationToken = user.verificationToken;
-    
+
     await sendMail({
       to: email,
       from: "dok6857@gmail.com",
