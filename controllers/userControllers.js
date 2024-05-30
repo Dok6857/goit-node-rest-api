@@ -61,7 +61,7 @@ export async function verificationByToken(req, res, next) {
 }
 
 export async function repeatVerification(req, res, next) {
-  const { email, verify, verificationToken } = req.body;
+  const { email } = req.body;
 
   try {
     if (!email) {
@@ -69,16 +69,17 @@ export async function repeatVerification(req, res, next) {
     }
     
     const user = await User.findOne({ email });
-    const verificationToken = user.verificationToken;
-
+    
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
-
+    
     if (user.verify === true) {
       return res.status(400).send({ message: "Verification has already been passed" })
     }
-
+    
+    const verificationToken = user.verificationToken;
+    
     await sendMail({
       to: email,
       from: "dok6857@gmail.com",
